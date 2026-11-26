@@ -49,6 +49,8 @@
     --white: #ffffff;
     --muted: #9a9a9e;
     --dim: #555558;
+    --ease-slow: cubic-bezier(.405, 0, .025, 1);
+    --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
   }
 
   * {
@@ -82,18 +84,19 @@
 
   .bottom-gradient-arc {
     position: absolute;
-    left: -12%;
-    right: -12%;
-    bottom: -10vh;
-    height: 54vh;
+    left: -18%;
+    right: -18%;
+    bottom: -14vh;
+    height: 62vh;
     background:
       radial-gradient(
-        ellipse 82% 72% at 50% 100%,
-        rgba(138, 142, 150, 0.44) 0%,
-        rgba(92, 95, 102, 0.28) 26%,
-        rgba(34, 36, 40, 0.13) 48%,
-        rgba(0, 0, 0, 0) 70%
+        ellipse 88% 78% at 50% 100%,
+        rgba(138, 142, 150, 0.26) 0%,
+        rgba(92, 95, 102, 0.16) 32%,
+        rgba(34, 36, 40, 0.07) 58%,
+        rgba(0, 0, 0, 0) 78%
       );
+    filter: blur(22px);
     transform-origin: center bottom;
     will-change: transform, opacity;
     animation: bottomArcBreathe 11s ease-in-out infinite alternate;
@@ -104,14 +107,15 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 28vh;
+    height: 32vh;
     background: linear-gradient(
       to top,
-      rgba(98, 101, 108, 0.34) 0%,
-      rgba(48, 50, 55, 0.16) 28%,
-      rgba(12, 13, 15, 0.04) 58%,
+      rgba(98, 101, 108, 0.20) 0%,
+      rgba(48, 50, 55, 0.09) 34%,
+      rgba(12, 13, 15, 0.025) 66%,
       rgba(0, 0, 0, 0) 100%
     );
+    filter: blur(10px);
     will-change: opacity, transform;
     animation: bottomEdgeBreathe 14s ease-in-out infinite alternate;
   }
@@ -158,41 +162,56 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
   }
 
-  .boot-logo-canvas {
-    width: 101px;
-    height: 101px;
+  .boot-logo-wrap {
+    position: relative;
+    width: 82px;
+    height: 82px;
+  }
+
+  .boot-logo-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     display: block;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+  }
+
+  .boot-logo-base {
+    opacity: 0.16;
+  }
+
+  .boot-logo-fill {
+    clip-path: inset(100% 0 0 0);
+    will-change: clip-path;
   }
 
   .boot-percent {
-    font-family: "Pixelify Sans", monospace;
-    font-size: 27px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: #787878;
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: #8a8a90;
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
 
-  .boot-pixel-bar {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    padding: 3.5px;
-    border: 1px solid #484848;
-    background: #000000;
+  .boot-bar-track {
+    width: 164px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
   }
 
-  .boot-pixel-cell {
-    width: 5.5px;
-    height: 5.5px;
-    background: #1c1c1c;
-    flex-shrink: 0;
+  .boot-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    transform-origin: left center;
+    transform: scaleX(0);
+    will-change: transform;
   }
 
   .boot-credit {
@@ -318,7 +337,7 @@
   /* Centered 4-block vertical stage — fits 100% in first viewport at 100% zoom */
   .page {
     --icon-size: clamp(132px, 26.5dvh, 220px);
-    --video-h: clamp(198px, 43.8dvh, 368px);
+    --video-h: clamp(158px, 35.0dvh, 294px);
     position: relative;
     z-index: 2;
     min-height: 100dvh;
@@ -328,7 +347,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(10px, 2dvh, 18px);
+    gap: clamp(13px, 2.5dvh, 23px);
   }
 
   /* 1. APP ICON (+30% larger, flat 2D with spatial ambient glow + mouse-driven 3D tilt) */
@@ -346,23 +365,49 @@
 
   .icon-glow {
     position: absolute;
-    top: calc(var(--icon-size) * -0.38);
-    bottom: calc(var(--icon-size) * -0.38);
-    left: calc(var(--icon-size) * -0.30);
-    right: calc(var(--icon-size) * -0.30);
-    border-radius: 50%;
+    top: calc(var(--icon-size) * -0.18);
+    bottom: calc(var(--icon-size) * -0.18);
+    left: calc(var(--icon-size) * -0.18);
+    right: calc(var(--icon-size) * -0.18);
+    border-radius: 30%;
     background: radial-gradient(
       circle at center,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(205, 228, 255, 0.10) 34%,
-      rgba(255, 255, 255, 0.025) 58%,
-      rgba(0, 0, 0, 0) 74%
+      rgba(255, 255, 255, 0.14) 22%,
+      rgba(255, 255, 255, 0.05) 54%,
+      rgba(255, 255, 255, 0) 76%
     );
-    filter: blur(30px);
-    opacity: 0.72;
+    filter: blur(18px);
+    opacity: 0.85;
     pointer-events: none;
     will-change: transform, opacity;
     transition: opacity 280ms ease;
+  }
+
+  .icon-glow::after {
+    content: "";
+    position: absolute;
+    inset: 6%;
+    border-radius: 28%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.22) 32%,
+      rgba(255, 255, 255, 0.09) 56%,
+      rgba(255, 255, 255, 0) 76%
+    );
+    filter: blur(14px);
+    pointer-events: none;
+    animation: iconGlowWave 1.1s ease-out infinite;
+  }
+
+  @keyframes iconGlowWave {
+    0% {
+      transform: scale(0.84);
+      opacity: 0.78;
+    }
+    100% {
+      transform: scale(1.26);
+      opacity: 0;
+    }
   }
 
   .icon-stage.is-hover .icon-glow {
@@ -462,9 +507,31 @@
     font-weight: 800;
     letter-spacing: 0.02em;
     line-height: 1.08;
-    color: var(--white);
-    transition: opacity 260ms ease, text-shadow 180ms ease;
+    background: linear-gradient(
+      105deg,
+      #96969e 0%,
+      #ffffff 28%,
+      #b5b5be 50%,
+      #ffffff 74%,
+      #96969e 100%
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: titleGradientFlow 4.6s ease-in-out infinite;
     user-select: none;
+  }
+
+  @keyframes titleGradientFlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  body.is-revealed .title-stage.reveal {
+    animation: blurIn 760ms ease-in-out var(--d, 140ms) both;
   }
 
   .title.is-pixel-pending {
@@ -506,7 +573,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    border: 0.75px solid rgba(255, 255, 255, 0.85);
+    border: 0.5px solid rgba(255, 255, 255, 0.22);
     background: #060606;
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
@@ -575,7 +642,7 @@
     flex-direction: column;
     align-items: center;
     gap: clamp(6px, 1.05dvh, 10px);
-    margin-top: clamp(4px, 0.95dvh, 9px);
+    margin-top: clamp(1px, 0.45dvh, 4px);
   }
 
   .btn-download {
@@ -630,16 +697,30 @@
     width: 100%;
     max-width: min(655px, 92vw);
     margin: 0 auto;
-    padding: clamp(54px, 9vh, 96px) 0 clamp(68px, 11vh, 110px);
+    padding: clamp(68px, 11.25vh, 120px) 0 clamp(85px, 13.75vh, 138px);
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 35px;
   }
 
   .about-lead-row {
     display: flex;
     align-items: flex-start;
     gap: 18px;
+  }
+
+  .about-line-slide {
+    opacity: 0;
+    transform: translateX(-48px);
+    transition:
+      opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) var(--line-delay, 0ms),
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1) var(--line-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .about-section.is-in-view .about-line-slide {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .about-flair-logo {
@@ -679,28 +760,14 @@
     line-height: 1.3;
     color: var(--white);
     text-transform: lowercase;
-    opacity: 0;
-    transform: translateX(-6px);
-    filter: blur(4px);
-    transition: opacity 280ms ease, transform 340ms cubic-bezier(0.22, 1.25, 0.36, 1), filter 300ms ease;
-  }
-
-  .about-pixel-item.is-shown {
-    opacity: 1;
-    transform: translateX(0);
-    filter: blur(0px);
   }
 
   .about-px-dot {
     width: 5px;
     height: 5px;
-    background: #8a8a8e;
+    background: var(--white);
     flex-shrink: 0;
     display: inline-block;
-  }
-
-  .about-pixel-item.is-shown .about-px-dot {
-    background: var(--white);
   }
 
   .about-goal {
@@ -715,7 +782,108 @@
     text-transform: lowercase;
   }
 
+  /* =========================================================================
+     6. SHOWCASE: 5 SQUARE PERSPECTIVE CARDS (BORDERLESS + LIGHT ON HOVER)
+     ========================================================================= */
+  .showcase-section {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 16px 22px clamp(85px, 12.5dvh, 138px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+  }
+
+  .showcase-grid {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .tilted-card {
+    position: relative;
+    width: 176px;
+    height: 176px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: radial-gradient(circle at 30% 25%, #232329 0%, #0d0d10 100%);
+    transform: perspective(520px) rotateY(20deg) scale(0.92);
+    transition: transform 460ms var(--ease-slow);
+  }
+
+  .tilted-card:hover {
+    transform: perspective(520px) rotateY(0deg) scale(1.05);
+  }
+
+  .tilted-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tilted-cover-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 1;
+  }
+
+  .tilted-cover-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: "Pixelify Sans", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    user-select: none;
+  }
+
+  .tilted-cover-placeholder svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.36;
+  }
+
+  .showcase-caption {
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(10px, 1.05vw, 12px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.72);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
   @media (max-width: 640px) {
+    .tilted-card {
+      width: 142px;
+      height: 142px;
+    }
+    .showcase-grid {
+      gap: 16px;
+    }
+    .showcase-section {
+      padding: 10px 14px 80px;
+      gap: 24px;
+    }
     .top-tag {
       top: 14px;
       left: 12px;
@@ -732,9 +900,9 @@
     }
     .page {
       --icon-size: clamp(124px, 23dvh, 170px);
-      --video-h: clamp(160px, 34dvh, 240px);
+      --video-h: clamp(128px, 27.2dvh, 192px);
       padding: 48px 16px 20px;
-      gap: 14px;
+      gap: 18px;
     }
     .btn-download {
       width: 100%;
@@ -759,12 +927,23 @@
   <div class="bottom-gradient-edge"></div>
 </div>
 
-<!-- APP-STYLE PIXELATED LOADING SCREEN -->
+<!-- SMOOTH BOOT LOADING SCREEN WITH ORIGINAL FLAIR LOGO -->
 <div class="boot-splash" id="bootSplash" aria-hidden="true">
   <div class="boot-center">
-    <canvas class="boot-logo-canvas" id="bootLogoCanvas" width="28" height="28"></canvas>
+    <div class="boot-logo-wrap">
+      <svg class="boot-logo-svg boot-logo-base" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/>
+        <path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/>
+        <path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/>
+      </svg>
+      <svg class="boot-logo-svg boot-logo-fill" id="bootLogoFill" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/>
+        <path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/>
+        <path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/>
+      </svg>
+    </div>
     <div class="boot-percent" id="bootPercent">0%</div>
-    <div class="boot-pixel-bar" id="bootPixelBar"></div>
+    <div class="boot-bar-track"><div class="boot-bar-fill" id="bootBarFill"></div></div>
   </div>
   <div class="boot-credit">only for flair workers</div>
 </div>
@@ -788,14 +967,13 @@
 
   <!-- 2. COMPACT INFO -->
   <section class="info-block">
-    <div class="title-stage" id="titleStage">
+    <div class="title-stage reveal" id="titleStage" style="--d: 140ms">
       <div class="title-glow" id="titleGlow" aria-hidden="true"></div>
       <div class="title-tilt" id="titleTilt">
-        <h1 class="title is-pixel-pending" id="titleText">flair wall</h1>
-        <canvas class="title-px-canvas" id="titlePxCanvas" aria-hidden="true"></canvas>
+        <h1 class="title" id="titleText">flair wall</h1>
       </div>
     </div>
-    <p class="subtitle reveal" style="--d: 280ms">Корпоративний інструмент для створення простих авок та постів</p>
+    <p class="subtitle reveal" style="--d: 280ms">Корпоративний інструмент<br>для створення простих авок та постів</p>
   </section>
 
   <!-- 3. 16:9 VIDEO BLOCK + THIN SYNCHRONIZED PROGRESS BAR -->
@@ -814,8 +992,8 @@
   <section class="cta-block reveal" style="--d: 460ms">
     <a
       class="btn-download"
-      href="Flair-Wall-App.zip"
-      download="Flair Wall App.zip"
+      href="FlairWallApp.V1.zip"
+      download="FlairWallApp.V1.zip"
     >
       <span>завантажити</span>
     </a>
@@ -831,7 +1009,7 @@
 
 <!-- 5. ABOUT SECTION BELOW HERO -->
 <section class="about-section" id="aboutSection">
-  <div class="about-lead-row">
+  <div class="about-lead-row about-line-slide" style="--line-delay: 0ms">
     <svg class="about-flair-logo" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/>
       <path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/>
@@ -841,15 +1019,77 @@
   </div>
 
   <ul class="about-pixel-list" id="aboutPixelList">
-    <li class="about-pixel-item" data-text="оголошень"><span class="about-px-dot"></span><span class="about-px-txt">оголошень</span></li>
-    <li class="about-pixel-item" data-text="апдейтів відділів"><span class="about-px-dot"></span><span class="about-px-txt">апдейтів відділів</span></li>
-    <li class="about-pixel-item" data-text="постів"><span class="about-px-dot"></span><span class="about-px-txt">постів</span></li>
-    <li class="about-pixel-item" data-text="простих крео b2b"><span class="about-px-dot"></span><span class="about-px-txt">простих крео b2b</span></li>
-    <li class="about-pixel-item" data-text="аватарок"><span class="about-px-dot"></span><span class="about-px-txt">аватарок</span></li>
-    <li class="about-pixel-item" data-text="шпалерів для девайсів"><span class="about-px-dot"></span><span class="about-px-txt">шпалерів для девайсів</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 120ms"><span class="about-px-dot"></span><span class="about-px-txt">оголошень</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 240ms"><span class="about-px-dot"></span><span class="about-px-txt">апдейтів відділів</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 360ms"><span class="about-px-dot"></span><span class="about-px-txt">постів</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 480ms"><span class="about-px-dot"></span><span class="about-px-txt">простих крео b2b</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 600ms"><span class="about-px-dot"></span><span class="about-px-txt">аватарок</span></li>
+    <li class="about-pixel-item about-line-slide" style="--line-delay: 720ms"><span class="about-px-dot"></span><span class="about-px-txt">шпалерів для девайсів</span></li>
   </ul>
 
-  <p class="about-goal">головна мета програми – збереження айдентики та корпоративного стилю при розповсюджені візуального сліду</p>
+  <p class="about-goal about-line-slide" style="--line-delay: 840ms">головна мета програми – збереження айдентики та корпоративного стилю при розповсюджені візуального сліду</p>
+</section>
+
+<!-- 6. SHOWCASE: 5 SQUARE PERSPECTIVE CARDS -->
+<section class="showcase-section" id="showcaseSection">
+  <div class="showcase-grid">
+    <!-- CARD 1: положи картинку в cards/1.jpg (или замени src) -->
+    <div class="tilted-card">
+      <div class="tilted-card-inner">
+        <div class="tilted-cover-placeholder">
+          <svg viewBox="0 0 1500 1500" fill="none"><path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/><path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/><path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/></svg>
+          <span>01</span>
+        </div>
+        <img class="tilted-cover-img" src="cards/1.jpg" alt="Flair Wall приклад 1" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <!-- CARD 2: положи картинку в cards/2.jpg (или замени src) -->
+    <div class="tilted-card">
+      <div class="tilted-card-inner">
+        <div class="tilted-cover-placeholder">
+          <svg viewBox="0 0 1500 1500" fill="none"><path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/><path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/><path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/></svg>
+          <span>02</span>
+        </div>
+        <img class="tilted-cover-img" src="cards/2.jpg" alt="Flair Wall приклад 2" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <!-- CARD 3: положи картинку в cards/3.jpg (или замени src) -->
+    <div class="tilted-card">
+      <div class="tilted-card-inner">
+        <div class="tilted-cover-placeholder">
+          <svg viewBox="0 0 1500 1500" fill="none"><path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/><path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/><path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/></svg>
+          <span>03</span>
+        </div>
+        <img class="tilted-cover-img" src="cards/3.jpg" alt="Flair Wall приклад 3" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <!-- CARD 4: положи картинку в cards/4.jpg (или замени src) -->
+    <div class="tilted-card">
+      <div class="tilted-card-inner">
+        <div class="tilted-cover-placeholder">
+          <svg viewBox="0 0 1500 1500" fill="none"><path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/><path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/><path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/></svg>
+          <span>04</span>
+        </div>
+        <img class="tilted-cover-img" src="cards/4.jpg" alt="Flair Wall приклад 4" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <!-- CARD 5: положи картинку в cards/5.jpg (или замени src) -->
+    <div class="tilted-card">
+      <div class="tilted-card-inner">
+        <div class="tilted-cover-placeholder">
+          <svg viewBox="0 0 1500 1500" fill="none"><path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/><path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/><path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/></svg>
+          <span>05</span>
+        </div>
+        <img class="tilted-cover-img" src="cards/5.jpg" alt="Flair Wall приклад 5" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </div>
+
+  <p class="showcase-caption">СТВОРЕНО ЗА 5 ХВ НА FLAIR WALL</p>
 </section>
 
 <script>
@@ -913,32 +1153,22 @@
 
   function updateBootVisuals(t) {
     const p = Math.max(0, Math.min(1, t));
-    if (bootLogoCtx) {
-      bootLogoCtx.clearRect(0, 0, GRID_N, GRID_N);
-      const total = logoPixels.length;
-      const filled = Math.round(p * total);
-      const bright = Math.round(102 + p * 153);
-      bootLogoCtx.fillStyle = "#1b1b1b";
-      for (let i = filled; i < total; i++) {
-        bootLogoCtx.fillRect(logoPixels[i].x, logoPixels[i].y, 1, 1);
-      }
-      bootLogoCtx.fillStyle = "rgb(" + bright + "," + bright + "," + bright + ")";
-      for (let i = 0; i < filled; i++) {
-        bootLogoCtx.fillRect(logoPixels[i].x, logoPixels[i].y, 1, 1);
-      }
+    const bootLogoFillEl = document.getElementById("bootLogoFill");
+    const bootBarFillEl = document.getElementById("bootBarFill");
+
+    if (bootLogoFillEl) {
+      const topInset = Math.max(0, (1 - p) * 100);
+      bootLogoFillEl.style.clipPath = "inset(" + topInset.toFixed(2) + "% 0 0 0)";
     }
 
     if (bootPercent) {
       bootPercent.textContent = Math.min(100, Math.round(p * 100)) + "%";
-      const lum = Math.round(108 + p * 86);
+      const lum = Math.round(118 + p * 120);
       bootPercent.style.color = "rgb(" + lum + "," + lum + "," + lum + ")";
     }
 
-    const filledCells = Math.round(p * BAR_CELLS);
-    const bLum = Math.round(104 + p * 92);
-    const col = "rgb(" + bLum + "," + bLum + "," + bLum + ")";
-    for (let i = 0; i < barCells.length; i++) {
-      barCells[i].style.background = i < filledCells ? col : "#1c1c1c";
+    if (bootBarFillEl) {
+      bootBarFillEl.style.transform = "scaleX(" + p.toFixed(4) + ")";
     }
   }
 
@@ -1109,13 +1339,6 @@
         if (playPromise && playPromise.catch) playPromise.catch(() => {});
       } catch (_) {}
     }
-
-    const startPixelTitle = () => setTimeout(playTitlePixelMaterialize, 140);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(startPixelTitle);
-    } else {
-      startPixelTitle();
-    }
   }
 
   // Run 2.1s pixelated logo boot splash on first load
@@ -1252,77 +1475,28 @@
     stage: document.getElementById("titleStage"),
     tiltEl: document.getElementById("titleTilt"),
     glowEl: document.getElementById("titleGlow"),
-    textShadowEl: titleText,
+    textShadowEl: null,
     maxTilt: 18,
     glowShift: 18,
     hoverScale: 1.055
   });
 
   // =========================================================================
-  // 4. PIXELATED GLYPH-DECODE REVEAL ANIMATION FOR ABOUT FEATURE LIST
+  // 4. LINE-BY-LINE SLIDE REVEAL ANIMATION FOR ABOUT SECTION
   // =========================================================================
-  const aboutListEl = document.getElementById("aboutPixelList");
-  let aboutAnimated = false;
-
-  function animatePixelLine(itemEl, delayMs) {
-    const txtEl = itemEl.querySelector(".about-px-txt");
-    const target = itemEl.dataset.text || (txtEl ? txtEl.textContent : "");
-    if (!txtEl || !target) return;
-    const glyphs = "░▒▓█▪▫";
-    const len = target.length;
-    const durMs = 480 + len * 18;
-
-    setTimeout(() => {
-      itemEl.classList.add("is-shown");
-      const startTs = performance.now();
-      let lastStep = -1;
-
-      function tick(now) {
-        const elapsed = now - startTs;
-        const p = Math.min(1, elapsed / durMs);
-        const step = Math.floor(elapsed / 38);
-        if (step !== lastStep || p >= 1) {
-          lastStep = step;
-          if (p >= 1) {
-            txtEl.textContent = target;
-            return;
-          }
-          const locked = Math.floor(p * len);
-          let out = "";
-          for (let i = 0; i < len; i++) {
-            const ch = target[i];
-            if (ch === " ") out += " ";
-            else if (i < locked) out += ch;
-            else if (i < locked + 3) out += glyphs[(step + i * 3) % glyphs.length];
-            else out += "\u00A0";
-          }
-          txtEl.textContent = out;
-        }
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }, delayMs);
-  }
-
-  function triggerAboutPixelList() {
-    if (aboutAnimated || !aboutListEl) return;
-    aboutAnimated = true;
-    const items = aboutListEl.querySelectorAll(".about-pixel-item");
-    items.forEach((el, idx) => animatePixelLine(el, idx * 140));
-  }
-
-  if (aboutListEl && "IntersectionObserver" in window) {
+  const aboutSectionRevealEl = document.getElementById("aboutSection");
+  if (aboutSectionRevealEl && "IntersectionObserver" in window) {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          triggerAboutPixelList();
+          aboutSectionRevealEl.classList.add("is-in-view");
           obs.disconnect();
         }
       });
-    }, { threshold: 0.22 });
-    obs.observe(aboutListEl);
-  } else {
-    setTimeout(triggerAboutPixelList, 2500);
+    }, { threshold: 0.18 });
+    obs.observe(aboutSectionRevealEl);
+  } else if (aboutSectionRevealEl) {
+    aboutSectionRevealEl.classList.add("is-in-view");
   }
 
   // =========================================================================
