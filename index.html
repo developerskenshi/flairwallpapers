@@ -770,16 +770,30 @@
     display: inline-block;
   }
 
+  .about-brand-box {
+    margin-left: 44px;
+    padding: 18px 22px;
+    background: var(--white);
+    border-radius: 0;
+    color: #000000;
+    font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(14.5px, 1.48vw, 16.5px);
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+    text-transform: none;
+  }
+
   .about-goal {
     padding-left: 44px;
-    padding-top: 4px;
+    padding-top: 2px;
     font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: clamp(14.5px, 1.5vw, 16.5px);
     font-weight: 500;
     line-height: 1.6;
     letter-spacing: 0.01em;
     color: #b8b8be;
-    text-transform: lowercase;
+    text-transform: none;
   }
 
   /* =========================================================================
@@ -916,6 +930,10 @@
     .about-goal {
       padding-left: 0;
     }
+    .about-brand-box {
+      margin-left: 0;
+      padding: 16px 18px;
+    }
   }
 </style>
 </head>
@@ -1015,7 +1033,7 @@
       <path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/>
       <path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/>
     </svg>
-    <p class="about-text">Програма розроблена для максимально простого та швидкого створення легких:</p>
+    <p class="about-text">Flair Wall для максимально простого та швидкого створення:</p>
   </div>
 
   <ul class="about-pixel-list" id="aboutPixelList">
@@ -1027,7 +1045,9 @@
     <li class="about-pixel-item about-line-slide" style="--line-delay: 720ms"><span class="about-px-dot"></span><span class="about-px-txt">шпалерів для девайсів</span></li>
   </ul>
 
-  <p class="about-goal about-line-slide" style="--line-delay: 840ms">головна мета програми – збереження айдентики та корпоративного стилю при розповсюджені візуального сліду</p>
+  <div class="about-brand-box about-line-slide" style="--line-delay: 840ms">Програму розроблено з використанням елементів брендингу компанії. Шаблонний дизайн Flair для тих, хто з ним не стикався або не має інструментів для його реалізації.</div>
+
+  <p class="about-goal about-line-slide" style="--line-delay: 960ms">Головна мета програми – збереження айдентики та корпоративного стилю при розповсюдженні візуального сліду.</p>
 </section>
 
 <!-- 6. SHOWCASE: 5 SQUARE PERSPECTIVE CARDS -->
