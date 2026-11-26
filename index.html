@@ -236,13 +236,12 @@
     animation: blurIn 680ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) both;
   }
 
-  /* Small pixelated caption at the very top of the site */
+  /* Small pixelated caption in the top-left corner (fades out on scroll) */
   .top-tag {
     position: fixed;
-    top: clamp(10px, 1.55dvh, 15px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;
+    top: clamp(16px, 2.2dvh, 22px);
+    left: clamp(16px, 2.4vw, 28px);
+    z-index: 10;
     font-family: "Pixelify Sans", monospace;
     font-size: clamp(10.5px, 1.35dvh, 11.5px);
     font-weight: 400;
@@ -252,11 +251,68 @@
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 520ms ease 180ms;
+    transform: translateY(0);
+    transition: opacity 280ms ease, transform 280ms ease;
   }
 
   body.is-revealed .top-tag {
     opacity: 1;
+  }
+
+  body.is-revealed .top-tag.is-hidden {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  /* Top-right navigation menu in sharp white-bordered boxes */
+  .top-nav {
+    position: fixed;
+    top: clamp(12px, 1.8dvh, 18px);
+    right: clamp(16px, 2.4vw, 28px);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 480ms ease 180ms;
+  }
+
+  body.is-revealed .top-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .top-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    border: 1px solid var(--white);
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: var(--white);
+    font-family: "Benzin", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: lowercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 140ms ease, color 140ms ease, transform 120ms ease;
+  }
+
+  .top-nav-btn:hover {
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .top-nav-btn:active {
+    transform: scale(0.97);
   }
 
   /* Centered 4-block vertical stage — fits 100% in first viewport at 100% zoom */
@@ -427,11 +483,14 @@
   }
 
   .subtitle {
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: clamp(11.5px, min(1.3vw, 1.65dvh), 13.5px);
-    font-weight: 600;
-    line-height: 1.38;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
     color: #e6e6e6;
-    max-width: 62ch;
+    text-transform: none;
+    max-width: 64ch;
   }
 
   /* 3. CENTERED 16:9 VIDEO BLOCK (+30% larger) + COMPACT RIGHT-ALIGNED PROGRESS BAR */
@@ -564,16 +623,130 @@
     letter-spacing: 0.02em;
   }
 
+  /* 5. EDITORIAL ABOUT SECTION BELOW HERO (SMALL FLAIR LOGO LEFT + PIXEL LIST + AVENIR NEXT) */
+  .about-section {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: min(655px, 92vw);
+    margin: 0 auto;
+    padding: clamp(54px, 9vh, 96px) 0 clamp(68px, 11vh, 110px);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .about-lead-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .about-flair-logo {
+    width: 26px;
+    height: 30px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.94;
+  }
+
+  .about-text {
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(13.5px, 1.4vw, 15.5px);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: #e6e6ea;
+    text-transform: none;
+  }
+
+  .about-pixel-list {
+    list-style: none;
+    padding-left: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .about-pixel-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(14px, 1.5vw, 17px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    color: var(--white);
+    text-transform: lowercase;
+    opacity: 0;
+    transform: translateX(-6px);
+    filter: blur(4px);
+    transition: opacity 280ms ease, transform 340ms cubic-bezier(0.22, 1.25, 0.36, 1), filter 300ms ease;
+  }
+
+  .about-pixel-item.is-shown {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0px);
+  }
+
+  .about-px-dot {
+    width: 5px;
+    height: 5px;
+    background: #8a8a8e;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .about-pixel-item.is-shown .about-px-dot {
+    background: var(--white);
+  }
+
+  .about-goal {
+    padding-left: 44px;
+    padding-top: 4px;
+    font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(14.5px, 1.5vw, 16.5px);
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: #b8b8be;
+    text-transform: lowercase;
+  }
+
   @media (max-width: 640px) {
+    .top-tag {
+      top: 14px;
+      left: 12px;
+      font-size: 9.5px;
+    }
+    .top-nav {
+      top: 10px;
+      right: 12px;
+      gap: 6px;
+    }
+    .top-nav-btn {
+      padding: 6px 9px;
+      font-size: 9.5px;
+    }
     .page {
       --icon-size: clamp(124px, 23dvh, 170px);
       --video-h: clamp(160px, 34dvh, 240px);
-      padding: 40px 16px 20px;
+      padding: 48px 16px 20px;
       gap: 14px;
     }
     .btn-download {
       width: 100%;
       min-width: 198px;
+    }
+    .about-section {
+      padding: 42px 16px 64px;
+      gap: 22px;
+    }
+    .about-pixel-list,
+    .about-goal {
+      padding-left: 0;
     }
   }
 </style>
@@ -596,7 +769,11 @@
   <div class="boot-credit">only for flair workers</div>
 </div>
 
-<div class="top-tag">only for flair workers</div>
+<div class="top-tag" id="topTag">only for flair workers</div>
+
+<nav class="top-nav" aria-label="Навігація">
+  <a class="top-nav-btn" href="#aboutSection" id="navInfoBtn">інформація</a>
+</nav>
 
 <main class="page">
 
@@ -618,7 +795,7 @@
         <canvas class="title-px-canvas" id="titlePxCanvas" aria-hidden="true"></canvas>
       </div>
     </div>
-    <p class="subtitle reveal" style="--d: 280ms">шпалери для фокусу на робочому столі</p>
+    <p class="subtitle reveal" style="--d: 280ms">Корпоративний інструмент для створення простих авок та постів</p>
   </section>
 
   <!-- 3. 16:9 VIDEO BLOCK + THIN SYNCHRONIZED PROGRESS BAR -->
@@ -640,7 +817,7 @@
       href="Flair-Wall-App.zip"
       download="Flair Wall App.zip"
     >
-      <span>скачати</span>
+      <span>завантажити</span>
     </a>
     <div class="mac-note">
       <svg width="10" height="12" viewBox="0 0 14 17" fill="none" aria-hidden="true">
@@ -651,6 +828,29 @@
   </section>
 
 </main>
+
+<!-- 5. ABOUT SECTION BELOW HERO -->
+<section class="about-section" id="aboutSection">
+  <div class="about-lead-row">
+    <svg class="about-flair-logo" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M1000.37 596.61L1002.8 598.006L1234.78 731.938V470.084L994.802 331.532H994.786L749.979 190.209L512.802 327.131V588.985L749.979 452.058L1000.37 596.61Z" fill="white"/>
+      <path d="M1002.8 901.975L760.401 1041.91L755.193 1044.93L523.208 1178.86L749.984 1309.78L992.38 1169.84L1234.78 1029.88V755.996L1008.01 625.074V898.954L1002.8 901.975Z" fill="white"/>
+      <path d="M491.964 625.066V339.176L265.188 470.098V1029.89L502.385 1166.82L620.474 1098.64L729.156 1035.9L491.964 898.962V625.066Z" fill="white"/>
+    </svg>
+    <p class="about-text">Програма розроблена для максимально простого та швидкого створення легких:</p>
+  </div>
+
+  <ul class="about-pixel-list" id="aboutPixelList">
+    <li class="about-pixel-item" data-text="оголошень"><span class="about-px-dot"></span><span class="about-px-txt">оголошень</span></li>
+    <li class="about-pixel-item" data-text="апдейтів відділів"><span class="about-px-dot"></span><span class="about-px-txt">апдейтів відділів</span></li>
+    <li class="about-pixel-item" data-text="постів"><span class="about-px-dot"></span><span class="about-px-txt">постів</span></li>
+    <li class="about-pixel-item" data-text="простих крео b2b"><span class="about-px-dot"></span><span class="about-px-txt">простих крео b2b</span></li>
+    <li class="about-pixel-item" data-text="аватарок"><span class="about-px-dot"></span><span class="about-px-txt">аватарок</span></li>
+    <li class="about-pixel-item" data-text="шпалерів для девайсів"><span class="about-px-dot"></span><span class="about-px-txt">шпалерів для девайсів</span></li>
+  </ul>
+
+  <p class="about-goal">головна мета програми – збереження айдентики та корпоративного стилю при розповсюджені візуального сліду</p>
+</section>
 
 <script>
 (function () {
@@ -1057,6 +1257,97 @@
     glowShift: 18,
     hoverScale: 1.055
   });
+
+  // =========================================================================
+  // 4. PIXELATED GLYPH-DECODE REVEAL ANIMATION FOR ABOUT FEATURE LIST
+  // =========================================================================
+  const aboutListEl = document.getElementById("aboutPixelList");
+  let aboutAnimated = false;
+
+  function animatePixelLine(itemEl, delayMs) {
+    const txtEl = itemEl.querySelector(".about-px-txt");
+    const target = itemEl.dataset.text || (txtEl ? txtEl.textContent : "");
+    if (!txtEl || !target) return;
+    const glyphs = "░▒▓█▪▫";
+    const len = target.length;
+    const durMs = 480 + len * 18;
+
+    setTimeout(() => {
+      itemEl.classList.add("is-shown");
+      const startTs = performance.now();
+      let lastStep = -1;
+
+      function tick(now) {
+        const elapsed = now - startTs;
+        const p = Math.min(1, elapsed / durMs);
+        const step = Math.floor(elapsed / 38);
+        if (step !== lastStep || p >= 1) {
+          lastStep = step;
+          if (p >= 1) {
+            txtEl.textContent = target;
+            return;
+          }
+          const locked = Math.floor(p * len);
+          let out = "";
+          for (let i = 0; i < len; i++) {
+            const ch = target[i];
+            if (ch === " ") out += " ";
+            else if (i < locked) out += ch;
+            else if (i < locked + 3) out += glyphs[(step + i * 3) % glyphs.length];
+            else out += "\u00A0";
+          }
+          txtEl.textContent = out;
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, delayMs);
+  }
+
+  function triggerAboutPixelList() {
+    if (aboutAnimated || !aboutListEl) return;
+    aboutAnimated = true;
+    const items = aboutListEl.querySelectorAll(".about-pixel-item");
+    items.forEach((el, idx) => animatePixelLine(el, idx * 140));
+  }
+
+  if (aboutListEl && "IntersectionObserver" in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          triggerAboutPixelList();
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.22 });
+    obs.observe(aboutListEl);
+  } else {
+    setTimeout(triggerAboutPixelList, 2500);
+  }
+
+  // =========================================================================
+  // 5. TOP-LEFT TAG HIDE ON SCROLL & SMOOTH SCROLL FOR "інформація"
+  // =========================================================================
+  const topTagEl = document.getElementById("topTag");
+  function syncTopTagVisibility() {
+    if (!topTagEl) return;
+    if (window.scrollY > 24) {
+      topTagEl.classList.add("is-hidden");
+    } else {
+      topTagEl.classList.remove("is-hidden");
+    }
+  }
+  window.addEventListener("scroll", syncTopTagVisibility, { passive: true });
+  syncTopTagVisibility();
+
+  const navInfoBtn = document.getElementById("navInfoBtn");
+  const aboutSectionEl = document.getElementById("aboutSection");
+  if (navInfoBtn && aboutSectionEl) {
+    navInfoBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      aboutSectionEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 })();
 </script>
 </body>
