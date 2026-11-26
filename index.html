@@ -55,6 +55,7 @@
     --white: #ffffff;
     --muted: #9a9a9e;
     --dim: #555558;
+    --video-h: clamp(158px, 35.0dvh, 294px);
     --ease-slow: cubic-bezier(.405, 0, .025, 1);
     --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
   }
@@ -1134,6 +1135,22 @@
     gap: 24px;
   }
 
+  .features-video-wrap {
+    margin-top: clamp(44px, 5.8vh, 64px);
+  }
+
+  .features-video-label {
+    font-family: "Benzin", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    font-size: clamp(10.5px, 1.05vw, 12px);
+    letter-spacing: 0.04em;
+    color: #8c8c96;
+    text-align: center;
+    text-transform: lowercase;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+
   .feature-card-stage {
     width: 344px;
     height: 312px;
@@ -1509,6 +1526,9 @@
       padding: 6px 10px;
       font-size: 9.5px;
     }
+    :root {
+      --video-h: clamp(128px, 27.2dvh, 192px);
+    }
     .page {
       --icon-size: clamp(124px, 23dvh, 170px);
       --video-h: clamp(128px, 27.2dvh, 192px);
@@ -1761,6 +1781,18 @@
         </div>
       </article>
     </div>
+    </div>
+
+    <div class="video-wrap features-video-wrap scroll-blur" style="--sd: 240ms">
+      <p class="features-video-label">демонстрація роботи</p>
+      <div class="video-frame" id="featuresVideoFrame">
+        <video id="featuresVideo" autoplay loop muted playsinline preload="auto">
+          <source src="area_2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-progress" id="featuresVideoProgress" aria-hidden="true">
+        <div class="video-progress-fill" id="featuresVideoProgressFill"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -2047,39 +2079,62 @@
   }
 
   // =========================================================================
-  // 2. VIDEO PLAYER + SMOOTH 60FPS SYNCHRONIZED TIMELINE PROGRESS BAR
+  // 2. VIDEO PLAYERS + SMOOTH 60FPS SYNCHRONIZED TIMELINE PROGRESS BARS
   // =========================================================================
-  const videoFrame = document.getElementById("videoFrame");
-  const heroVideo = document.getElementById("heroVideo");
-  const videoProgress = document.getElementById("videoProgress");
-  const videoProgressFill = document.getElementById("videoProgressFill");
+  function bindVideoPlayer(videoEl, frameEl, progressEl, fillEl, observeVisibility) {
+    if (!videoEl || !frameEl) return;
 
-  if (heroVideo && videoFrame) {
     const revealVideo = () => {
-      if (heroVideo.videoWidth > 0) videoFrame.classList.add("has-video");
+      if (videoEl.videoWidth > 0) frameEl.classList.add("has-video");
     };
-    heroVideo.addEventListener("loadeddata", revealVideo);
-    heroVideo.addEventListener("playing", revealVideo);
-    if (heroVideo.readyState >= 2) revealVideo();
+    videoEl.addEventListener("loadeddata", revealVideo);
+    videoEl.addEventListener("playing", revealVideo);
+    if (videoEl.readyState >= 2) revealVideo();
 
     function syncProgressBar() {
-      if (videoProgressFill && heroVideo.duration > 0 && isFinite(heroVideo.duration)) {
-        const ratio = Math.max(0, Math.min(1, heroVideo.currentTime / heroVideo.duration));
-        videoProgressFill.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+      if (fillEl && videoEl.duration > 0 && isFinite(videoEl.duration)) {
+        const ratio = Math.max(0, Math.min(1, videoEl.currentTime / videoEl.duration));
+        fillEl.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
       }
       requestAnimationFrame(syncProgressBar);
     }
     requestAnimationFrame(syncProgressBar);
 
-    if (videoProgress) {
-      videoProgress.addEventListener("click", (e) => {
-        if (!heroVideo.duration || !isFinite(heroVideo.duration)) return;
-        const r = videoProgress.getBoundingClientRect();
+    if (progressEl) {
+      progressEl.addEventListener("click", (e) => {
+        if (!videoEl.duration || !isFinite(videoEl.duration)) return;
+        const r = progressEl.getBoundingClientRect();
         const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-        heroVideo.currentTime = pct * heroVideo.duration;
+        videoEl.currentTime = pct * videoEl.duration;
       });
     }
+
+    if (observeVisibility && "IntersectionObserver" in window) {
+      const vidObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            try {
+              const p = videoEl.play();
+              if (p && p.catch) p.catch(() => {});
+            } catch (_) {}
+          }
+        });
+      }, { threshold: 0.15 });
+      vidObs.observe(videoEl);
+    }
   }
+
+  const videoFrame = document.getElementById("videoFrame");
+  const heroVideo = document.getElementById("heroVideo");
+  const videoProgress = document.getElementById("videoProgress");
+  const videoProgressFill = document.getElementById("videoProgressFill");
+  bindVideoPlayer(heroVideo, videoFrame, videoProgress, videoProgressFill, false);
+
+  const featuresVideoFrame = document.getElementById("featuresVideoFrame");
+  const featuresVideo = document.getElementById("featuresVideo");
+  const featuresVideoProgress = document.getElementById("featuresVideoProgress");
+  const featuresVideoProgressFill = document.getElementById("featuresVideoProgressFill");
+  bindVideoPlayer(featuresVideo, featuresVideoFrame, featuresVideoProgress, featuresVideoProgressFill, true);
 
   function revealSiteAfterBoot() {
     if (bootSplash) {
